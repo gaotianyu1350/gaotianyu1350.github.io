@@ -10,9 +10,9 @@ permalink: /about/
 
 Hi~ I am **Tianyu Gao**, a third-year undergraduate student from the **Department of Computer Science and Technology, Tsinghua University**. I am advised by [Professor Zhiyuan Liu](http://nlp.csai.tsinghua.edu.cn/~lzy/) and affiliated with [Tsinghua Natural Language Processing and Computational Social Science Lab (THUNLP)](http://nlp.csai.tsinghua.edu.cn/site2/). My research interests lie within the intersection of natural language processing, deep learning, information extraction and knowledge graphs.
 
-[[My CV]]() [[THUNLP github]](https://github.com/thunlp)
+[[My CV]](https://gaotianyu1350.github.io/assets/cv_thu_tianyu_gao.pdf) [[THUNLP github]](https://github.com/thunlp)
 
-## Publications**
+## **Publications**
 
 **Hybrid Attention-Based Prototypical Networks for Noisy Few-Shot Relation Classification** <br>**Tianyu Gao**\*, Xu Han\*, Zhiyuan Liu and Maosong Sun. (* indicates equal contribution)<br>_To appear in proc. 33rd AAAI Conference on Artificial Intelligence, 2019_
 
