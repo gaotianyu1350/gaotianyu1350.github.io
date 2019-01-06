@@ -14,7 +14,7 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Tianyu Gao's Blog
-email: gaotianyu1350 <at> 126 <dot> com
+email: gaotianyu1350&ltat&gt126&ltdot&gtcom
 description: >- # this means to ignore newlines until "baseurl:"
   I'm Tianyu Gao, an undergraduate student from Tsinghua University.
   I'm also a member of THUNLP lab. 
