@@ -8,7 +8,7 @@ permalink: /about/
 
 ## **About Me**
 
-Hi~ I am **Tianyu Gao**, an undergraduate student from the **Department of Computer Science and Technology, Tsinghua University**. I am advised by [Professor Zhiyuan Liu](http://nlp.csai.tsinghua.edu.cn/~lzy/) and affiliated with [Tsinghua Natural Language Processing and Computational Social Science Lab (THUNLP)](http://nlp.csai.tsinghua.edu.cn/site2/). My research interests lie within the intersection of natural language processing, deep learning, information extraction and knowledge graphs.
+Hi~ I am **Tianyu Gao**, a third-year undergraduate student from the **Department of Computer Science and Technology, Tsinghua University**. I am advised by [Professor Zhiyuan Liu](http://nlp.csai.tsinghua.edu.cn/~lzy/) and affiliated with [Tsinghua Natural Language Processing and Computational Social Science Lab (THUNLP)](http://nlp.csai.tsinghua.edu.cn/site2/). My research interests lie within the intersection of natural language processing, deep learning, information extraction and knowledge graphs.
 
 [[My CV]]() [[THUNLP github]](https://github.com/thunlp)
 
