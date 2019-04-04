@@ -50,12 +50,6 @@ _As undergraduate student. Jan. 2018 - Present_
 
 * Under the guidance of Prof. Zhiyuan Liu.
 
-#### **Huawei Technologies Noah’s Ark Lab**
-
-_As intern. Dec. 2018 - Present_
-
-* Research on BERT with knowledge embedding.
-
 #### **Momenta**
 
 _As intern. May 2017 - May. 2018_
