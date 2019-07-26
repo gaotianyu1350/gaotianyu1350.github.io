@@ -1,10 +1,10 @@
 ---
 layout: page
 title: Tianyu Gao
-permalink: /about/
+jermalink: /about/
 ---
 
-
+I have moved to this new homepage: [gaotianyu.xyz](gaotianyu.xyz/about). Check it out!
 
 ## **About Me**
 
