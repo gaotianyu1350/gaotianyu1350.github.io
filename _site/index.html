@@ -1,7 +1,3 @@
----
-title: blog
----
-
 <html>
 <head>
     <title>Tianyu Gao</title>
@@ -25,10 +21,32 @@ title: blog
     <link rel='shortcut icon' href='/favicon.png?v=e' />
     <link href='/css/blog.css' rel='stylesheet'/>
 
-    {% include mathjax.html %}
+    <script type='text/x-mathjax-config'>
+MathJax.Hub.Config({
+  jax: ['input/TeX', 'output/HTML-CSS'],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['$$', '$$']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    extensions: ['color.js']
+  },
+  messageStyle: 'none',
+  'HTML-CSS': { preferredFont: 'TeX', availableFonts: ['STIX','TeX'] }
+});
+</script>
+
+<script src='//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML' type='text/javascript'></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
 </head>
 <body>
-    {% include nav.html %}
+    <div class='nav'>
+    <ul class='wrap'>
+        <li><a href='/'>Home</a></li>
+        <li><a href='/blog'>Blog</a></li>
+        <li><a href='/feed.xml'>RSS</a></li>
+    </ul>
+</div>
     <div id='blog' class='wrap'>
         <div id='intro'>
             <div class='quote'>
@@ -37,26 +55,26 @@ title: blog
             </div>
         </div>
         <div id='posts' class='section'>
-            {% for post in site.posts %}
+            
                 <div class='post-row'>
                     <p class='post-title'>
-                        <a href="{{ post.url }}">
-                            {% katexmm %}
-                            {{ post.title }}
-                            {% endkatexmm %}
+                        <a href="/blog/2020/06/21/example/">
+                            
+                            An Example Post
+                            
                         </a>
                     </p>
                     <p class='post-date'>
-                        {{ post.date | date_to_long_string }}
+                        21 June 2020
                     </p>
                 </div>
                 <p class='post-subtitle'>
-                    {% katexmm %}
-                    {{ post.subtitle }}
-                    {% endkatexmm %}
+                    
+                    Here is some extra detail about the post.
+                    
                 </p>
-                <span class='hidden'>{{ forloop.index }}</span>
-            {% endfor %}
+                <span class='hidden'>1</span>
+            
         </div>
     </div>
 </body>
