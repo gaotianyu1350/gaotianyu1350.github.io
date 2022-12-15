@@ -1,0 +1,110 @@
+---
+title: blog
+---
+
+<html>
+<head>
+    <title>Tianyu Gao</title>
+    <meta charset='UTF-8'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+
+    <meta name='description' content="Tianyu Gao\'s website.">
+    <!-- A decent browser will parse this fine:
+         https://webmasters.stackexchange.com/questions/92744. -->
+    <meta name='keywords' content='
+        natural language processing,
+        machine learning,
+        language model,
+        retrieval,
+        question answering,
+        deep learning,
+        computer science
+    '>
+    <meta name='author' content='Tianyu Gao'>
+
+    <link rel='shortcut icon' href='/assets/website/website.png' />
+    <link href='/css/blog.css' rel='stylesheet'/>
+
+    {% include mathjax.html %}
+</head>
+<body>
+    {% include nav.html %}
+    <div id='blog' class='wrap'>
+        <h2>Tianyu Gao 高天宇</h2>
+
+        <!-- Add image and text side by side -->
+        <div>
+            <div style="width: 28%; float: right!important; margin-left: 3rem;">
+                <img src="/assets/website/headphoto.jpeg" width=100%>
+            </div>
+            <div>
+                <p>
+                    I am a third-year PhD student at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Prof. Danqi Chen</a>. I am also a proud member of the <a href="https://princeton-nlp.github.io">Princeton NLP group</a>. Before Princeton, I received my bachelor's degree at Tsinghua University. During my time at Tsinghua, I was a member of <a href="http://nlp.csai.tsinghua.edu.cn/">THUNLP</a> and was advised by <a href="http://nlp.csai.tsinghua.edu.cn/~lzy/">Prof. Zhiyuan Liu</a>. 
+                    <!-- Here is my <a href="/assets/resume.pdf">CV</a>. -->
+                </p>
+        
+                <p>
+                    Find me on <a href="https://twitter.com/gaotianyu1350">Twitter</a>, <a href="https://scholar.google.com/citations?user=il-F8YYAAAAJ&hl=en&oi=ao">Google Scholar</a>, and <a href="https://github.com/gaotianyu1350">Github</a>!
+                </p>
+                
+                <p>Email: <a style="font-family: courier;">[firstname]g@princeton.edu</a>
+                </p>
+            </div>
+        </div>
+    
+
+        <h3>Research</h3>
+        <p>
+        My research interests lie within the intersection of natural language processing and machine learning. At the current stage, I am specifically interested in pre-trained language models, few-shot learning, contrastive learning, information extraction, etc.
+        </p>            
+
+        <h3>Highlighted Publications</h3>
+
+        <p>Please refer to <a href="/publication">publications</a> for the full list. </p>
+
+        <p>
+            <span class="authors">Alexander Wettig*, Tianyu Gao*, Zexuan Zhong, Danqi Chen</span><br>
+            <span class="title">Should You Mask 15% in Masked Language Modeling?</span><br>
+            <span class="venue">Preprint</span>, 2022
+            <a class='label pdf-label' href='https://arxiv.org/abs/2202.08005'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/DinkyTrain'>[code]</a>
+        </p>
+        <p>
+            <span class="authors">Huihan Li*, Tianyu Gao*, Manan Goenka, Danqi Chen</span><br>
+            <span class="title">Ditch the Gold Standard: Re-evaluating Conversational Question Answering</span><br>
+            <span class="venue">Proceedings of ACL</span>, 2022 
+            <span>(Outstanding Paper Award)</span>
+            <a class='label pdf-label' href='https://arxiv.org/abs/2112.08812'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/cqa-evaluation'>[code]</a>
+        </p>
+        
+        <p>
+            <span class="authors">Tianyu Gao*, Xingcheng Yao*, Danqi Chen</span><br>
+            <span class="title">SimCSE: Simple Contrastive Learning of Sentence Embeddings</span><br>
+            <span class="venue">Proceedings of EMNLP</span>, 2021
+            <a class='label pdf-label' href='https://arxiv.org/abs/2104.08821'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/simcse'>[code]</a>
+        </p>
+
+        <p>
+            <span class="authors">Tianyu Gao*, Adam Fisch*, Danqi Chen</span><br>
+            <span class="title">Making Pre-trained Language Models Better Few-shot Learners</span><br>
+            <span class="venue">Proceedings of ACL</span>, 2021
+            <a class='label pdf-label' href='https://arxiv.org/pdf/2012.15723.pdf'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/LM-BFF'>[code]</a>
+        </p>
+
+        <p>
+            <span class="authors">Tianyu Gao, Xu Han, Hao Zhu, Zhiyuan Liu, Peng Li, Maosong Sun, Jie Zhou</span><br>
+            <span class="title">FewRel 2.0: Towards More Challenging Few-Shot Relation Classification </span><br>
+            <span class="venue">Proceedings of EMNLP (Short Paper)</span>, 2019
+            <a class='label pdf-label' href='https://www.aclweb.org/anthology/D19-1649.pdf'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/thunlp/FewRel'>[code]</a>
+        </p>
+
+        <br>
+        <br>
+        <p style="font-style: italic;">This website is adapted from <a href="http://gregorygundersen.com/">Gregory Gunderson</a>.</p>
+    </div>
+</body>
+</html>

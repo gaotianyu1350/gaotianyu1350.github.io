@@ -109,8 +109,6 @@ h1 {
   padding-top: 1em;
 }
 .article .figure {
-  border-top: 1px solid hsla(0, 0%, 0%, 0.2);
-  border-bottom: 1px solid hsla(0, 0%, 0%, 0.2);
   padding: 20px 0;
 }
 .article .figure .caption {
@@ -150,14 +148,23 @@ h1 {
   color: rgba(0, 0, 0, 0.5);
 }
 #blog {
-  margin-top: 80px;
+  margin-top: 60px;
   margin-bottom: 100px;
+  font-size: 14px;
+  line-height: 1.6em;
+  margin-bottom: 40px;
 }
 #blog #intro {
-  font-size: 14px;
   font-style: italic;
-  line-height: 1.4em;
-  margin-bottom: 40px;
+}
+#blog .authors {
+  color: #666666;
+}
+#blog .title {
+  font-weight: bold;
+}
+#blog .venue {
+  font-style: italic;
 }
 #blog .quote {
   margin-bottom: 30px;

@@ -8,7 +8,7 @@ title: blog
     <meta charset='UTF-8'>
     <meta content='width=device-width, initial-scale=1' name='viewport'/>
 
-    <meta name='description' content='Tianyu Gao\' website.'>
+    <meta name='description' content="Tianyu Gao\'s website.">
     <!-- A decent browser will parse this fine:
          https://webmasters.stackexchange.com/questions/92744. -->
     <meta name='keywords' content='
@@ -22,42 +22,21 @@ title: blog
     '>
     <meta name='author' content='Tianyu Gao'>
 
-    <link rel='shortcut icon' href='/favicon.png?v=e' />
+    <link rel='shortcut icon' href='/assets/website/website.png' />
     <link href='/css/blog.css' rel='stylesheet'/>
 
     {% include mathjax.html %}
 </head>
 <body>
-    {% include nav.html %}
     <div id='blog' class='wrap'>
-        <div id='intro'>
-            <div class='quote'>
-                <p>I learned very early the difference between knowing the name of something and knowing something.</p>
-                <a href='https://en.wikiquote.org/wiki/Richard_Feynman' target='_blank'>Richard Feynman</a>
-            </div>
-        </div>
-        <div id='posts' class='section'>
-            {% for post in site.posts %}
-                <div class='post-row'>
-                    <p class='post-title'>
-                        <a href="{{ post.url }}">
-                            {% katexmm %}
-                            {{ post.title }}
-                            {% endkatexmm %}
-                        </a>
-                    </p>
-                    <p class='post-date'>
-                        {{ post.date | date_to_long_string }}
-                    </p>
-                </div>
-                <p class='post-subtitle'>
-                    {% katexmm %}
-                    {{ post.subtitle }}
-                    {% endkatexmm %}
-                </p>
-                <span class='hidden'>{{ forloop.index }}</span>
-            {% endfor %}
-        </div>
+        <br>
+        <br>
+        <h2>Tianyu Gao 高天宇</h2>
+        <a href='/about'>About</a><br>
+        <a href='/publication'>Publication</a><br>
+        <a href='/blog'>Blog</a><br>
+        <a href='/photograph'>Photograph</a><br>
+        <div style="font-family: courier;">[firstname]g@princeton.edu</div>
     </div>
 </body>
 </html>

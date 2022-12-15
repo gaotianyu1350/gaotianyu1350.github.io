@@ -4,10 +4,11 @@
     <meta charset='UTF-8'>
     <meta content='width=device-width, initial-scale=1' name='viewport'/>
 
-    <meta name='description' content='Gregory Gundersen is a PhD candidate at Princeton.'>
+    <meta name='description' content="Tianyu Gao\'s website.">
     <meta name='keywords' content='{{ page.keywords }}'>
-    <meta name='author' content='Gregory Gundersen'>
+    <meta name='author' content='Tianyu Gao'>
 
+    <link rel='shortcut icon' href='/assets/website/website.png' />
     <link href='/css/blog.css' rel='stylesheet'/>
     <link href='/css/trac.css' rel='stylesheet'/>
     <link href='/css/markdown.css' rel='stylesheet'/>
@@ -23,7 +24,7 @@
             <h4>{{ page.subtitle }}</h4>
             <div class='bylines'>
                 <div class='byline'>
-                    <h3>Published</h3>
+                    <p>{{page.authors}}</p>
                     <p>{{ page.date |  date: '%d %B %Y' }}</p>
                 </div>
             </div>
