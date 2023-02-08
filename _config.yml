@@ -3,7 +3,6 @@ domain: gaotianyu.xyz
 url: https://gaotianyu.xyz
 permalink: /blog/:year/:month/:day/:title/
 environment: prod
-url: "http://gregorygundersen.com"  # Sitemap base URL.
 plugins:
   - jekyll-scholar
   - jekyll-sitemap
