@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>Paper reading: December 2022 arXiv notes</title>
+    <meta charset='UTF-8'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+
+    <meta name='description' content="Tianyu Gao\'s website.">
+    <meta name='keywords' content='draft'>
+    <meta name='author' content='Tianyu Gao'>
+
+    <link rel='shortcut icon' href='/assets/website/website.png' />
+    <link href='/css/blog.css' rel='stylesheet'/>
+    <link href='/css/trac.css' rel='stylesheet'/>
+    <link href='/css/markdown.css' rel='stylesheet'/>
+
+    <script type='text/x-mathjax-config'>
+MathJax.Hub.Config({
+  jax: ['input/TeX', 'output/HTML-CSS'],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['[[', ']]']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    extensions: ['color.js']
+  },
+  messageStyle: 'none',
+  'HTML-CSS': { preferredFont: 'TeX', availableFonts: ['STIX','TeX'] }
+});
+</script>
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+<div class='content'>
+    <div class='nav'>
+    <ul class='wrap'>
+        <li><a href='/'>Home</a></li>
+        <li><a href='/about'>About</a></li>
+        <li><a href='/publications'>Publications</a></li>
+        <li><a href='/blog'>Blog</a></li>
+        <li><a href='/photography'>Photography</a></li>
+    </ul>
+</div>
+    <div class='front-matter'>
+        <div class='wrap'>
+            <h1>Paper reading: December 2022 arXiv notes</h1>
+            <h4></h4>
+            <div class='bylines'>
+                <div class='byline'>
+                    <p>Tianyu Gao</p>
+                    <p>05 January 2022</p>
+                </div>
+            </div>
+            <div class='clear'></div>
+        </div>
+    </div>
+    <div class='wrap article'>
+        <p>I tried to track arXiv papers under cs.CL to learn about the recent progress in NLP. However, such tracking usually breaks when there are a burst of papers, for example, when near an anonymous DDL. My solution to a hundred arXiv tabs opened has been always cmd+Q (a “hard-reboot”, as Southwest Airlines would call it). I realized I always missed piles of interesting papers and relying on Twitter/slack recommendations made me extremely biased of what’s going on. So I decide this time to put in some more effort to go through December’s arXiv papers.</p>
+
+<p>After EMNLP, NLP forks all left Abu Dhabi except me, staying here to renew my US visa. Sadly, my visa is under “administrative processing” and I have to wait for an “indefinite” period of time. Flying back home (China) is also extremely unaffordable due to lack of flight, so I spent Christmas and New Year wondering around the area, traveling around UAE, Oman, Morocco, and Turkey. While traveling around is lonely, I can also use the time to read some papers and experience being a “digital nomad”.</p>
+
+<p align="center"><img src="/assets/2023-1-5-dec2022arxiv/muscat.jpeg" alt="Responsive image" class="figure-img img-fluid" style="margin:20px" width="100%" /><br />Photo from Muscat, Oman.</p>
+
+<p>Ok let’s get down to business. This paper list focuses on new papers coming out on arXiv in December 2022 (some might be revision). I am mainly interested in the following directions and the list reflects them too: retrieval (LMs and retrieval; dense retrieval) and LLM (in-context learning; instruction tuning; prompting; generation; efficient use of LLM). Let me know if you find other interesting papers that I didn’t mention!</p>
+
+<h2 id="retrievallm-a-path-to-faithful-and-generalizable-llm">Retrieval+LM: a path to faithful and generalizable LLM?</h2>
+
+<p>We have seen a lot of hype brought by GPT-3 and ChatGPT, especially how they can answer questions with “facts”, memorized in their parameters. But such behaviors are not generalizable — a model trained in 2022 wouldn’t know any news in 2023 — and also have hallucination issues — the answers are not supported by any explicit documents and may be inaccurate.</p>
+
+<p>Adding a retrieval component to LMs can be a remedy. We have seen works adding entity knowledge to LMs (<a href="https://arxiv.org/pdf/1905.07129.pdf">Zhang et al., 2019</a>),</p>
+
+
+    </div>
+    <div id='bibliography'>
+        <div class='wrap'>
+            <ol class="bibliography"></ol>
+        </div>
+    </div>
+</div>
+</body>
+</html>
