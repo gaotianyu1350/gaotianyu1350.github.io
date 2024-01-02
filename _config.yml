@@ -4,6 +4,6 @@ url: https://gaotianyu.xyz
 permalink: /blog/:year/:month/:day/:title/
 environment: prod
 plugins:
-  - jekyll-scholar
+  # - jekyll-scholar
   - jekyll-sitemap
   - jekyll-feed
