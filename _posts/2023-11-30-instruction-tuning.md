@@ -79,7 +79,7 @@ is equivalent to optimizing the following objective using MLE:
 
 <div>
 [[
--\mathbb{E}_{(x,y_w,y_l)\in D}\left[ \log \sigma \left( \beta \log \frac{\pi_\theta (y_w|x)}{\pi_\text{ref} (y_w|x)} -\beta  \frac{\pi_\theta (y_l|x)}{\pi_\text{ref} (y_l|x)} \right) \right],
+-\mathbb{E}_{(x,y_w,y_l)\in D}\left[ \log \sigma \left( \beta \log \frac{\pi_\theta (y_w|x)}{\pi_\text{ref} (y_w|x)} -\beta \log \frac{\pi_\theta (y_l|x)}{\pi_\text{ref} (y_l|x)} \right) \right],
 ]]
 </div>
 
