@@ -1,0 +1,171 @@
+<html>
+<head>
+    <title>Tianyu Gao</title>
+    <meta charset='UTF-8'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+
+    <meta name='description' content="Tianyu Gao's website.">
+    <!-- A decent browser will parse this fine:
+         https://webmasters.stackexchange.com/questions/92744. -->
+    <meta name='keywords' content='
+        natural language processing,
+        machine learning,
+        language model,
+        retrieval,
+        question answering,
+        deep learning,
+        computer science
+    '>
+    <meta name='author' content='Tianyu Gao'>
+
+    <link rel='shortcut icon' href='/assets/website/website.png' />
+    <link href='/css/blog.css' rel='stylesheet'/>
+
+    <script type='text/x-mathjax-config'>
+MathJax.Hub.Config({
+  jax: ['input/TeX', 'output/HTML-CSS'],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['[[', ']]']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    extensions: ['color.js']
+  },
+  messageStyle: 'none',
+  'HTML-CSS': { preferredFont: 'TeX', availableFonts: ['STIX','TeX'] }
+});
+</script>
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+    <div class='nav'>
+    <ul class='wrap'>
+        <li><a href='/'>Home</a></li>
+        <li><a href='/about'>About</a></li>
+        <li><a href='/publications'>Publications</a></li>
+        <!-- <li><a href='/awards'>Awards</a></li> -->
+        <!-- <li><a href='/talks'>Talks</a></li> -->
+        <!-- <li><a href='/service'>Teaching / Mentoring / Services</a></li> -->
+        <li><a href='/blog'>Blog</a></li>
+        <!-- <li><a href='/photography'>Photography</a></li> -->
+    </ul>
+</div>
+    <div id='blog' class='wrap'>
+
+
+
+        <!-- Add image and text side by side -->
+        <div>
+            <div style="width: 28%; float: right!important; margin-left: 3rem;">
+                <img src="/assets/tianyu_gao_headphoto.jpg" width=100%>
+            </div>
+            <div>
+
+        <h2>Tianyu Gao 高天宇</h2>
+        <p>Member of Technical Staff, OpenAI
+        <br>
+        Incoming Assistant Professor,<br>Dept of Computer Science and Engineering, UCSD</p>
+                <p>
+                    <b>Previously</b>, I was a PhD student at Princeton University, advised by <a href="https://www.cs.princeton.edu/~danqic/">Danqi Chen</a>.  I received my bachelor's degree from Tsinghua University, where I worked with <a href="http://nlp.csai.tsinghua.edu.cn/~lzy/">Zhiyuan Liu</a>. 
+                    <!-- Here is my <a href="/assets/resume.pdf">CV</a>. -->
+                </p>
+        
+                <p>
+                    Find me on <a href="https://twitter.com/gaotianyu1350">X</a>, <a href="https://scholar.google.com/citations?user=il-F8YYAAAAJ&hl=en&oi=ao">Google Scholar</a>, and <a href="https://github.com/gaotianyu1350">Github</a>!
+                </p>
+                
+                <p>Email: <a style="font-family: courier;">[firstname]g@princeton.edu</a>
+                </p>
+
+            </div>
+        </div>
+    
+
+        <h3>Research</h3>
+        <p>
+        I am driven by the exciting potential of LLMs in transformative applications, such as their use as <b>information-seeking tools</b>. I develop principled techniques and evaluations for key components of this emerging paradigm: 
+        <ul>
+            <li>Powerful semantic search with embedding models (<a href="https://arxiv.org/abs/2104.08821">SimCSE</a>, <a href="https://arxiv.org/abs/2407.18940">LitSearch</a>)</li>
+            <li>Generations with citations for verifiability (<a href='https://arxiv.org/abs/2305.14627'>ALCE</a>)
+            </li>
+            <li>Long-context language models (<a href="https://arxiv.org/abs/2402.16617">CEPE</a>, <a href="https://arxiv.org/abs/2410.02694">HELMET</a>, <a href="https://arxiv.org/abs/2410.02660">ProLong</a>, <a href="https://arxiv.org/abs/2501.05414">LongProc</a>)</li>
+            <li>Instruction following and reward hacking (<a href="https://arxiv.org/abs/2310.07641">LLMBar</a>)</li>
+        </ul>
+
+        To enable these powerful applications in large-scale deployments, I also work on improving the <b>capabilities and efficiency</b> of LLMs:
+        <ul>
+            <li>Efficient fine-tuning methods that require only a few examples (<a href="https://arxiv.org/abs/2012.15723">LM-BFF</a>) and memory footprint comparable to inference (<a href="https://arxiv.org/abs/2305.17333">MeZO</a>)</li>
+            <li>Cost-effective approaches to build capable small models (<a href="https://arxiv.org/abs/2310.06694">Sheared-Llama</a>)</li>
+            <li>Techniques to accelerate pre-training (<a href="https://arxiv.org/abs/2202.08005">high masking rate</a>, <a href="https://arxiv.org/abs/2501.01956">MeCo</a>)</li>
+            <li>Understanding LLM capabilities (<a href="https://arxiv.org/abs/2305.09731">what ICL learns</a>)</li>
+        </ul>
+        
+        <p>Please refer to <a href="/publications">publications</a> for the full list of my research papers. </p> 
+<!--
+        <h3>Highlighted Publications</h3>
+
+        <p>Please refer to <a href="/publications">publications</a> for the full list. </p>
+
+        <p>
+            <span class="authors">Tianyu Gao*, Alexander Wettig*, Howard Yen, Danqi Chen</span><br>
+                <span class="title">How to Train Long-Context Language Models (Effectively)</span><br>
+                <span class="venue">Preprint</span>, 2024
+                <a class='label pdf-label' href='https://arxiv.org/abs/2410.02660'>[pdf]</a>
+                <a class='label code-label' href='https://github.com/princeton-nlp/ProLong'>[code]</a>
+                <a class='label code-label' href='https://huggingface.co/princeton-nlp/Llama-3-8B-ProLong-512k-Instruct'>[huggingface]</a>
+        </p>
+            
+        <p>
+            <span class="authors">Howard Yen, Tianyu Gao, Minmin Hou, Ke Ding, Daniel Fleischer, Peter Izsak, Moshe Wasserblat, Danqi Chen</span><br>
+                <span class="title">HELMET: How to Evaluate Long-Context Language Models Effectively and Thoroughly</span><br>
+                <span class="venue">Preprint</span>, 2024
+                <a class='label pdf-label' href='https://arxiv.org/abs/2410.02694'>[pdf]</a>
+                <a class='label code-label' href='https://github.com/princeton-nlp/HELMET'>[code]</a>
+        </p>
+
+
+        <p>
+            <span class="authors">Tianyu Gao, Howard Yen, Jiatong Yu, Danqi Chen        </span><br>
+         <span class="title">Enabling Large Language Models to Generate Text with Citations     </span><br>
+         <span class="venue">Proceedings of EMNLP</span>, 2023
+         <a class='label pdf-label' href='https://arxiv.org/abs/2305.14627'>[pdf]</a>
+         <a class='label code-label' href='https://github.com/princeton-nlp/ALCE'>[code]</a>
+     </p>
+    
+     <p>
+        <span class="authors">Sadhika Malladi*, Tianyu Gao*, Eshaan Nichani, Alex Damian, Jason D. Lee, Danqi Chen, Sanjeev Arora    </span><br>
+     <span class="title">Fine-Tuning Language Models with Just Forward Passes </span><br>
+     <span class="venue">Proceedings of Neurips</span>, 2023
+     <span>(oral)</span>
+     <a class='label pdf-label' href='https://arxiv.org/abs/2305.17333'>[pdf]</a>
+     <a class='label code-label' href='https://github.com/princeton-nlp/MeZO'>[code]</a>
+    </p>
+        
+        <p>
+            <span class="authors">Tianyu Gao*, Xingcheng Yao*, Danqi Chen</span><br>
+            <span class="title">SimCSE: Simple Contrastive Learning of Sentence Embeddings</span><br>
+            <span class="venue">Proceedings of EMNLP</span>, 2021
+            <a class='label pdf-label' href='https://arxiv.org/abs/2104.08821'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/simcse'>[code]</a>
+        </p>
+
+        <p>
+            <span class="authors">Tianyu Gao*, Adam Fisch*, Danqi Chen</span><br>
+            <span class="title">Making Pre-trained Language Models Better Few-shot Learners</span><br>
+            <span class="venue">Proceedings of ACL</span>, 2021
+            <a class='label pdf-label' href='https://arxiv.org/pdf/2012.15723.pdf'>[pdf]</a>
+            <a class='label code-label' href='https://github.com/princeton-nlp/LM-BFF'>[code]</a>
+        </p>
+
+-->
+
+        <br>
+        <br>
+        <p style="font-style: italic;">This website is adapted from <a href="http://gregorygundersen.com/">Gregory Gunderson</a>.</p>
+    </div>
+</body>
+</html>

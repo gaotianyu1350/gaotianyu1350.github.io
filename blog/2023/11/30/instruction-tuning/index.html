@@ -1,0 +1,212 @@
+<html>
+<head>
+    <title>Teach Llamas to Talk: Recent Progress in Instruction Tuning</title>
+    <meta charset='UTF-8'>
+    <meta content='width=device-width, initial-scale=1' name='viewport'/>
+
+    <meta name='description' content="Tianyu Gao\'s website.">
+    <meta name='keywords' content='research, llm, instruction-tuning, instruction-following, RLHF'>
+    <meta name='author' content='Tianyu Gao'>
+
+    <link rel='shortcut icon' href='/assets/website/website.png' />
+    <link href='/css/blog.css' rel='stylesheet'/>
+    <link href='/css/trac.css' rel='stylesheet'/>
+    <link href='/css/markdown.css' rel='stylesheet'/>
+
+    <script type='text/x-mathjax-config'>
+MathJax.Hub.Config({
+  jax: ['input/TeX', 'output/HTML-CSS'],
+  tex2jax: {
+    inlineMath: [ ['$', '$'] ],
+    displayMath: [ ['[[', ']]']],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+    extensions: ['color.js']
+  },
+  messageStyle: 'none',
+  'HTML-CSS': { preferredFont: 'TeX', availableFonts: ['STIX','TeX'] }
+});
+</script>
+
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+</head>
+<body>
+<div class='content'>
+    <div class='nav'>
+    <ul class='wrap'>
+        <li><a href='/'>Home</a></li>
+        <li><a href='/about'>About</a></li>
+        <li><a href='/publications'>Publications</a></li>
+        <!-- <li><a href='/awards'>Awards</a></li> -->
+        <!-- <li><a href='/talks'>Talks</a></li> -->
+        <!-- <li><a href='/service'>Teaching / Mentoring / Services</a></li> -->
+        <li><a href='/blog'>Blog</a></li>
+        <!-- <li><a href='/photography'>Photography</a></li> -->
+    </ul>
+</div>
+    <div class='front-matter'>
+        <div class='wrap'>
+            <h1>Teach Llamas to Talk: Recent Progress in Instruction Tuning</h1>
+            <h4>Data, algorithms, and evaluation on instruction tuning.</h4>
+            <div class='bylines'>
+                <div class='byline'>
+                    <p>Tianyu Gao</p>
+                    <p>30 November 2023</p>
+                </div>
+            </div>
+            <div class='clear'></div>
+        </div>
+    </div>
+    <div class='wrap article'>
+        <p><em>Disclaimer: this is not a comprehensive review of instruction-tuning or RLHF literature, but a brief introduction of the recent progress (and a little promotion on our work). However, any comments/suggestions are welcome and please feel free to email me (tianyug@princeton.edu) and I would love to have a discussion!</em></p>
+
+<p>Large language models (LLMs), powered by billions of parameters and trained with trillions of tokens, are quite powerful as they can handle a variety of tasks out of the box. However, to be useful in real-world applications and to act as a general task-solving machine, they must master following user instructions and responding in a coherent and helpful way, instead of being a mere “stochastic parrot”, echoing the chaotic language patterns from the Internet. Thus, open-ended instruction tuning<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote" rel="footnote">1</a></sup> (<a href="https://arxiv.org/abs/2203.02155">Ouyang et al., 2022</a>; InstructGPT), which fine-tunes an LLM such that it can follow user instructions and respond in a helpful, honest, and harmless way (Anthropic’s HHH criteria; <a href="https://arxiv.org/abs/2112.00861">Askell et al., 2021</a>), emerged as a promising approach. The interest further increased after the huge success of ChatGPT. Open-ended instruction tuning usually contains two stages:</p>
+
+<ul>
+  <li><strong>Supervised fine-tuning</strong> (SFT) the model on collected user <em>instructions</em> and gold <em>responses.</em></li>
+  <li><strong>Aligning</strong> (the primary method for this is reinforcement learning from human feedback; RLHF; <a href="https://arxiv.org/abs/2203.02155">Ouyang et al., 2022</a>) the model with human preferences. This usually requires human preference data, which comprise response pairs and annotations of which one is better.</li>
+</ul>
+
+<p>Collecting supervised fine-tuning or preference data is known to be prohibitively expensive (<a href="https://www.interconnects.ai/p/llama-2-from-meta">Lambert, 2023</a>), thus it stayed as a corporate game until 2023, when people found cheaper ways to construct such data. Since then there have been numerous open-source efforts in developing instruction-tuned models. In the following, I will cover such efforts in four parts: <strong>SFT data</strong>, <strong>preference data</strong>, <strong>algorithms</strong>, and <strong>evaluation</strong>. In the end, I will introduce <strong><a href="https://arxiv.org/abs/2310.07641">our latest work</a></strong> on instruction-following evaluation, which shows that it is important to set up the right evaluator and otherwise you may get misleading results.</p>
+
+<h2 id="supervised-fine-tuning-sft-data">Supervised fine-tuning (SFT) data</h2>
+
+<p>There are, in general, two purposes of supervised fine-tuning and they correspond to two types of data. One is to further improve general language understanding abilities of LLMs, reflected in traditional NLP benchmarks like HellaSwag (<a href="https://arxiv.org/abs/1905.07830">Zellers et al., 2019</a>), MMLU (<a href="https://arxiv.org/abs/2009.03300">Hendrycks et al., 2021</a>), etc. The other is to train LLMs to follow instructions, acquire conversational abilities, and be helpful and harmless (<a href="https://arxiv.org/abs/2112.00861">Askell et al., 2021</a>).</p>
+
+<p>Corresponding to the first purpose, there is <em>multi-task instruction tuning</em> data, which have been heavily explored between 2020-2022. Those data combine thousands of NLP tasks together and give each task a natural language instruction, then one can train models on the combination in a multi-task way (for a more thorough review, see Sebastian Ruder’s great <a href="https://nlpnewsletter.substack.com/p/instruction-tuning-vol-1?utm_source=profile&amp;utm_medium=reader2">blogpost</a>). Representative datasets include Natural Instruction (<a href="https://arxiv.org/abs/2104.08773">Mishra et al., 2021</a>; <a href="https://arxiv.org/abs/2204.07705">Wang et al., 2022</a>), T0 (<a href="https://arxiv.org/abs/2110.08207">San et al., 2021</a>), and Flan (<a href="https://arxiv.org/abs/2109.01652">Wei et al., 2021</a>; <a href="https://arxiv.org/abs/2210.11416">Chung et al., 2022</a>). Different from open-ended instruction tuning, those datasets/models target traditional NLP tasks (question answering, natural language inference, etc.) more and tend to have shorter/simpler/less diverse instructions and responses — imagine the difference between “classify the sentiment of the sentence” and “write me a personal webpage with a similar style as OpenAI’s blog by using Jekyll.” Therefore, models trained on these datasets usually are not deployed as nowadays “instruction-tuned” models or chatbots, despite their strong performance on NLP benchmarks. <a href="https://arxiv.org/abs/2306.04751">Wang et al., 2023</a> (TÜLU) showed that combining these datasets with the new open-ended instruction tuning datasets can improve both the general language understanding ability and the instruction following ability. <a href="https://arxiv.org/abs/2306.02707">Mukherjee et al., 2023</a> (Orca) found that using those data as seeds, prompting GPT-4 to output answers with explanations, and imitating GPT-4’s responses can significantly improve weaker model’s performance. The mixture usage of data is adopted in some of the public instruction-tuned models, such as <a href="https://stability.ai/blog/stable-beluga-large-instruction-fine-tuned-models">Stable Beluga</a>.</p>
+
+<p>Now let’s talk about open-ended instruction tuning data, which notably emerged in 2023 (in the following, “SFT data” refer to open-ended instruction tuning data). It is general belief that training with these data does not improve LLMs’ “knowledge” (reflected by scores on traditional benchmarks), but merely “guides” them to follow the instruction-following or conversational format, gaining an engaging tone, being polite, etc (superficial alignment hypothesis; <a href="https://arxiv.org/abs/2305.11206">Zhou et al., 2023</a>).</p>
+
+<p>Collecting SFT data is expensive, as one needs to both collect user instructions and annotate demonstration responses (<a href="https://arxiv.org/abs/2203.02155">Ouyang et al., 2022</a>). One primary way for open-source models to get open-ended instruction tuning data is to distill from proprietary LLMs. One of the earliest open-source instruction models, <a href="https://crfm.stanford.edu/2023/03/13/alpaca.html">Alpaca</a>, used self-instruct (<a href="https://arxiv.org/pdf/2212.10560.pdf">Wang et al., 2023</a>) to prompt <code class="language-plaintext highlighter-rouge">text-davinci-003</code> (a version of InstructGPT model) and generate pseudo SFT data, and then SFTed LLaMA-7B on it; <a href="https://github.com/project-baize/baize-chatbot">Baize</a> (<a href="https://github.com/project-baize/baize-chatbot">Xu et al., 2023</a>) also used self-instruct, but instead prompted ChatGPT to self-chat for acquiring multi-turn data; WizardLM (<a href="https://arxiv.org/abs/2304.12244">Xu et al., 2023</a>) improved data diversity by using ChatGPT to rewrite Alpaca data iteratively; UltraChat (<a href="https://arxiv.org/abs/2305.14233">Ding et al., 2023</a>) first constructed questions automatically using different strategies, then prompted ChatGPT to simulate a conversation given the question. <a href="https://lmsys.org/blog/2023-03-30-vicuna/">Vicuna</a> and <a href="https://bair.berkeley.edu/blog/2023/04/03/koala/">Koala</a> explored <a href="https://sharegpt.com">SharGPT</a>, a website where users share their chats with ChatGPT, as its SFT data. A recent similar effort, <a href="https://openreview.net/pdf?id=Bl8u7ZRlbM">WildChat</a>, provided online users free ChatGPT access and collected the conversations, though the focus was more on studying toxic use cases. Even though it is a relative cheap way to acquire data, imitating proprietary LLMs is found to just “mimic ChatGPT’s style but not its factuality” (<a href="https://arxiv.org/abs/2305.15717">Gudibande et al., 2023</a>), hence putting a question on how far open-source models can go solely relying on such SFT data.</p>
+
+<p>Another way to collect SFT data is to manually annotate a small amount of data. <a href="https://open-assistant.io">Open Assistant</a> initiated a crowd-sourcing effort where volunteers write both instructions and responses; <a href="https://github.com/databrickslabs/dolly">Dolly</a> contains 15k Databricks-employee-generated data (more towards Wikipedia-based factoid QA). LIMA (”less is more for alignment”; <a href="https://arxiv.org/abs/2305.11206">Zhou et al., 2023</a>), a collection of author-curated 1,000 SFT data (have a distribution heavily steered towards Stack Exchange and wikiHow), is found to be surprisingly effective in producing strong instruction models. However, whether we only need 1,000 examples<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote" rel="footnote">2</a></sup> or we can use Internet-crowdsourced data, comparing to using dedicatedly-collected large-scale data, remains a question, as there is not apple-to-apple comparison.</p>
+
+<p>While open-source models trained on these imitation and human SFT data are still not comparable to proprietary models like ChatGPT, GPT-4, or Claude (<a href="https://chat.lmsys.org">Chatbot Arena</a>; <a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a>), we see two promises:</p>
+
+<p>(1) LLaMA-2-70B-chat, a LLaMA-2-70B (open-source) model tuned on <strong>closed-source</strong> data, is shown to be “more helpful” than ChatGPT by human evaluation (<a href="https://arxiv.org/abs/2307.09288">Touvron et al., 2023</a>). This shows that we have a base model (LLaMA-2) that is potentially as strong as ChatGPT’s base model (in terms of factual knowledge, commonsense, reasoning ability, etc.), mitigating the “false promise” problem (<a href="https://arxiv.org/abs/2305.15717">Gudibande et al., 2023</a>).</p>
+
+<p>(2) Our research community has already conducted exciting research on the “toy” or “laboratory” data, such as better alignment algorithms, which will be mentioned below.</p>
+
+<h2 id="what-about-preference-data">What about preference data?</h2>
+
+<p>Despite the impressive “illusion” that open-source SFT models give us (in fact, they ignited the trend of open-source effort in instruction tuning), merely having SFT is not enough. Aligning the model with human preference data is essential for models to be a better language assistant. An easy way to reason about it is to think about how to “be honest”: SFT almost always encourages the model to give an answer and hardly teaches the model to say “I don’t know about this” (Yoav Goldberg’s <a href="https://gist.github.com/yoavg/6bff0fecd65950898eba1bb321cfbd81">blogpost</a>; John Schulman’s <a href="https://www.youtube.com/watch?v=hhiLw5Q_UFg">Berkeley talk</a>). Alignment algorithms have also been shown to bring better “human satisfaction” in several works (<a href="https://arxiv.org/abs/2203.02155">Ouyang et al., 2022</a>; <a href="https://arxiv.org/abs/2204.05862">Bai et al., 2022</a>; <a href="https://arxiv.org/abs/2307.09288">Touvron et al., 2023</a>). However, most open-source models have not gone through the alignment stage (RLHF), due to (1) the high cost to run RL, (2) the brittleness to tune PPO (the RL algorithm used by OpenAI) hyperparameters, and (3) the lack of high-quality preference data. The lack of data further hinders the community effort to (potentially) create better algorithms that are more efficient/effective than RL.</p>
+
+<p>The most commonly used two preference datasets for developing aligning algorithms are OpenAI’s TL;DR preference data (summarization; <a href="https://arxiv.org/abs/2009.01325">Stiennon et al., 2020</a>) and Anthropic’s HH-RLHF dataset (human-model open-ended dialogues; <a href="https://arxiv.org/abs/2204.05862">Bai et al., 2022</a>).<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote" rel="footnote">3</a></sup> Though they both have good qualities, the diversity and the complexity of instructions are not comparable to nowadays’ SFT data.</p>
+
+<p>In 2023, there emerged a number of new preference datasets. While they can be valuable resources to researchers, whether their qualities suffice for alignment algorithms remains to be seen. There are crowd-sourcing efforts to collect preferences from humans: Both <a href="https://open-assistant.io">Open Assistant</a> and <a href="https://lmsys.org/blog/2023-07-20-dataset/">Chatbot Arena</a> launched a preference data collection campaign on the Internet and collected preference labels from volunteers. More datasets take a simulated or heuristic approach: <a href="https://huggingface.co/datasets/stanfordnlp/SHP">SHP</a> uses numbers-of-upvote heuristics on Reddit to construct a synthetic preference dataset; <a href="https://crfm.stanford.edu/2023/05/22/alpaca-farm.html">AlpacaFarm</a> (<a href="https://arxiv.org/abs/2305.14387">Dubois et al., 2023</a>) and <a href="https://huggingface.co/datasets/openbmb/UltraFeedback">UltraFeedback</a> (<a href="https://arxiv.org/abs/2310.01377">Cui et al., 2023</a>) use GPT-4 as a gold annotator; <a href="https://arxiv.org/abs/2305.13735">Kim et al., 2023</a>, <a href="https://arxiv.org/abs/2310.02263">Xu et al., 2023</a>; <a href="https://arxiv.org/pdf/2307.12950.pdf">Yang et al., 2023</a> use heuristics such as outputs of stronger models should be preferred or outputs from a “good” prompt should be preferred. There is evidence showing that most of them (<a href="https://crfm.stanford.edu/2023/05/22/alpaca-farm.html">AlpacaFarm</a>, <a href="https://huggingface.co/datasets/openbmb/UltraFeedback">UltraFeedback</a>, <a href="https://arxiv.org/abs/2305.13735">Kim et al., 2023</a>, and <a href="https://arxiv.org/abs/2310.02263">Xu et al., 2023</a>) can help RL or other alignment algorithms, but there is no apple-to-apple comparison. Huggingface recently released a model (Zephyr; <a href="https://arxiv.org/abs/2310.16944">Tunstall et al., 2023</a>) that is trained with <a href="https://arxiv.org/abs/2305.14233">UltraChat</a> (SFT) and <a href="https://huggingface.co/datasets/openbmb/UltraFeedback">UltraFeedback</a> (alignment, using DPO), which is shown to have comparable performance to LLaMA-2-Chat-70B, a model trained on closed-source data.</p>
+
+<p>In contrary to relying on human preferences, another line of work tries to use “AI feedback” — using LLMs to guide LLMs without human involvement. The idea is different from “using GPT-4 as an annotator”, as GPT-4 is still trained with human preferences but here the goal is for the model to bootstrap without human preference data. <a href="https://arxiv.org/abs/2212.08073">Bai et al., 2022</a> first proposed two concepts: “constitutional AI”, which defines a series of “principles” that good generations should follow and prompts an SFT model to self-improve its generations (by self-critiques and revision), and then fine-tunes the model on the improved generations; and “reinforcement learning from AI feedback (RLAIF)”, where one prompts the SFT model to generate preferences over output pairs (instead of human)<sup id="fnref:4" role="doc-noteref"><a href="#fn:4" class="footnote" rel="footnote">4</a></sup>. Experiment wise, they demonstrate that starting from a model trained only with “helpfulness” human supervision, it is possible to train the model to be “harmless” (no human supervision on harmlessness). However, the pipeline in <a href="https://arxiv.org/abs/2212.08073">Bai et al., 2022</a> still starts from some human preference labels. <a href="https://arxiv.org/abs/2309.00267">Lee et al., 2023</a> demonstrated that starting from an SFT model, RLAIF achieves comparable performance to RLHF on a summarization task, with no human preference label involved. The direction of RLAIF has generated considerable excitement and interest, as it is a viable solution to “scalable oversight” (<a href="https://arxiv.org/abs/2211.03540">Bowman et al., 2022</a>), a scenario when the models-to-be-aligned have beyond-human capacities. However, how good these methods really are still remains unclear, as using simple heuristics to construct data (also no human involvement) can outperform them (RLCD; <a href="https://arxiv.org/pdf/2307.12950.pdf">Yang et al., 2023</a>).</p>
+
+<h2 id="is-rl-the-only-way">Is RL the only way?</h2>
+
+<p>Using PPO (<a href="https://arxiv.org/abs/1707.06347">Schulman et al., 2017</a>) for RLHF (the most famous ones: <a href="https://arxiv.org/abs/2009.01325">Stiennon et al., 2020</a>; <a href="https://arxiv.org/abs/2203.02155">Ouyang et al., 2022</a>; though the idea of RLHF dates back to 2016 in the RL community) has been the primary methods for alignment (for example, it’s used for InstructGPT, believed to be used in ChatGPT and GPT-4, and is used for <a href="https://arxiv.org/abs/2307.09288">LLaMA-2-Chat</a>). The basic idea is that you first train a reward model on preference data, then you can use the reward model to provide feedback and use RL to tune the model. There has been a rich body of literature on RLHF and you can read <a href="https://huggingface.co/blog/rlhf">this HuggingFace blogpost</a> for more details.</p>
+
+<p>RLHF is effective, but is complicated to implement, prone to optimization instability, and sensitive to hyperparameters (<a href="https://arxiv.org/abs/2305.18290">Rafailov et al., 2023</a>; <a href="https://arxiv.org/abs/2306.01693">Wu et al., 2023</a>; <a href="https://arxiv.org/abs/2304.05302">Yuan et al., 2023</a>). Excitingly, there are a number of new methods proposed that can align models with preference data, and some of them are claimed to be stronger than RLHF.</p>
+
+<p><strong>Best-of-n.</strong> The first intuition we can use is that models, after SFT, already have the potential to generate good outputs and we just need to pick them out. In WebGPT (<a href="https://arxiv.org/abs/2112.09332">Nakano et al., 2021</a>) and summarization from human feedback (<a href="https://arxiv.org/abs/2009.01325">Stiennon et al., 2022</a>), authors explored best-of-n sampling — sampling n outputs and using a reward model to pick the best — and showed that this often can achieve similar performance to RLHF. However, as pointed out by <a href="https://openai.com/research/measuring-goodharts-law">this OpenAI blogpost</a>, best-of-n is inefficient if the final optimal policy is very far away from the original SFT model (n increases exponentially to the KL between final policy and the SFT model), not to mention that even if n is small, it is very inefficient for inference.</p>
+
+<p><strong>Expert iteration.</strong> Then there come methods that use best-of-n in training — we can sample a lot during training (no inference efficiency concerns), pick the best ones, and SFT on them. <a href="https://platform.openai.com/docs/model-index-for-researchers">FeedME</a><sup id="fnref:5" role="doc-noteref"><a href="#fn:5" class="footnote" rel="footnote">5</a></sup>, the method that is used to produce OpenAI’s <code class="language-plaintext highlighter-rouge">text-davinci-002</code>, trains the model on its own sampled outputs that are liked by human labelers. One step further, this can be combined with sampling the best-of-n online (sample n outputs, pick the best one by a reward model, and then train on the best one, repeat), which is essentially expert iteration (<a href="https://arxiv.org/abs/1705.08439">Anthony et al., 2017</a>); the sampling of best-of-n can also be combined with natural language feedback (<a href="https://arxiv.org/abs/2303.16755">Scheurer et al., 2023</a>).</p>
+
+<p><strong>Conditional tokens.</strong> Another idea is “conditional tokens” (<a href="https://arxiv.org/abs/2205.13636">Lu et al., 2022</a>; <a href="https://arxiv.org/abs/2302.08582">Korbak et al., 2023</a>; <a href="https://arxiv.org/abs/2302.02676">Liu et al., 2023</a>): one can do SFT on LMs with both good and bad examples, and prepend a “good” prompt to good examples and a “bad” prompt to bad examples. During inference, you can condition the model with the “good” prefix and expect the model to generate good outputs.</p>
+
+<p><strong>Contrastive-based methods.</strong> Finally, there are several newly proposed methods that closely resemble the idea of contrastive learning: one can get probabilities of both good and bad examples from the model, and can “promote” the good ones while “repressing” the bad ones. Given preference data, SLiC (<a href="https://arxiv.org/abs/2210.00045">Zhao et al., 2022</a>; <a href="https://arxiv.org/abs/2305.10425">2023</a>) and RRHF (<a href="https://arxiv.org/abs/2304.05302">Yuan et al., 2023</a>) optimize both a contrastive ranking loss and a regularization loss. For example, the SLiC loss function is as following,</p>
+
+<p>[[
+\mathcal{L}(\theta)=max(0, \delta-\log \pi_\theta(y_w|x)+\log \pi_\theta (y_l|x))-\lambda \log \pi_\theta(y_{\text{ref}}|x),
+]]</p>
+
+<p>where $\pi_\theta$ is the language model and $x,y_w,y_l,y_{\text{ref}}$ are the instruction, winning output, losing output, and the reference output. Intuitively, the first term enforces the contrast over the preferred/dispreferred pair and the second term makes sure the model does not deviates too much from the SFT distribution. Similarly, PRO (<a href="https://arxiv.org/abs/2306.17492">Song et al., 2023</a>) adopts a Softmax-form of contrastive loss and optimizes over multiple negative outputs instead of just one.</p>
+
+<p>DPO (<a href="https://arxiv.org/abs/2305.18290">Rafailov et al., 2023</a>) takes on a similar idea but starts from the RLHF’s objective function. After some theoretical analysis, DPO shows that optimizing the RLHF objective</p>
+
+<div>
+[[
+\mathbb{E}_{x\in D, y\in \pi_\theta(y|x)} \left[ r_\phi (x,y)\right] - \beta \text{D}_\text{KL} \left[\pi_\theta(y|x) || \pi_\text{ref} (y|x) \right],
+]]
+</div>
+
+<p>is equivalent to optimizing the following objective using MLE:</p>
+
+<div>
+[[
+-\mathbb{E}_{(x,y_w,y_l)\in D}\left[ \log \sigma \left( \beta \log \frac{\pi_\theta (y_w|x)}{\pi_\text{ref} (y_w|x)} -\beta \log \frac{\pi_\theta (y_l|x)}{\pi_\text{ref} (y_l|x)} \right) \right],
+]]
+</div>
+
+<p>where $r_\phi(x,y)$ is the reward model,  $\sigma(\cdot)$ is the sigmoid function, $\pi_\theta$ is the current model, and $\pi_\text{ref}$ is the SFT model.</p>
+
+<p>One downside of these models is that they either sample $y_w,y_l$ from the SFT model or take them directly from existing datasets (thus, sampled from other models), creating a distribution mismatch. <a href="https://arxiv.org/pdf/2309.06657.pdf">Liu et al., 2023</a> (RSO) proposed to fix this problem with sampling from the optimal policy $\pi^*$ — by doing reject sampling with the reward model. They showed that applying such sampling strategy on top of SLiC or DPO can improve the final model performance.</p>
+
+<p>These methods have received much attention recently and are shown by other parties to be effective — for example, <a href="https://arxiv.org/abs/2310.02263">Xu et al., 2023</a> demonstrated that DPO can bring significant improvement over SFT and HuggingFace’s Zephyr model (<a href="https://arxiv.org/abs/2310.16944">Tunstall et al., 2023</a>), also trained with DPO, achieves strong performance on MT-Bench, even comparable to Llama-2-chat and GPT-3.5. As these methods are much cheaper than RL, it is good news to the research and open-source community and can potentially inspire more, better alignment algorithms.</p>
+
+<p>On the other hand, we need to better understand the properties of models trained with alignment algorithms and whether they truly help learn useful features — for example, <a href="https://arxiv.org/abs/2310.03716">Singhal et al., 2023</a> showed that on several popular datasets, the learned reward models often have preferences highly correlated to length, and RLHF with length can recover most of the performance improvement.</p>
+
+<h2 id="evaluation">Evaluation</h2>
+
+<p>A notable challenge in developing open-ended instruction-tuned models (or any open-ended generation methods) is the evaluation. Human evaluation remains the “gold standard” for assessing the abilities of open-ended conversational models. However, human evaluation is often unreliable, especially if one uses cheap crowdsourcing platforms like Amazon Mechanical Turk (<a href="https://aclanthology.org/2021.emnlp-main.97.pdf">Karpinska et al., 2021</a>). Moreover, human evaluation is costly and hard to conduct apple-to-apple comparison with. Recently, people start to use stronger LLMs (e.g., ChatGPT or GPT-4) to evaluate weaker LLMs (e.g., open-source LLaMA-based models) — this is known as “LLM evaluators” — and it turns out to be a popular cost-effective alternative.</p>
+
+<p>At first sight, evaluating models with models sounds ridiculous. However, it makes sense for developing open-source and research models: proprietary models like GPT-4 are trained from a much stronger base model and are trained on instruction data with much higher quality and quantity, thus they are superior compared to open-source or research models. As long as there is such a big ability gap, models like GPT-4 should suffice as an evaluator.</p>
+
+<p>Several pilot works using LLMs as evaluators demonstrated “reassuring” results: LLM evaluators often have strong agreement with human evaluation (<a href="https://arxiv.org/abs/2305.01937">Chiang and Lee, 2023</a>; <a href="https://arxiv.org/abs/2305.14387">Dubois et al., 2023</a>; <a href="https://arxiv.org/abs/2304.00723">Chen et al., 2023</a>; <a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a>). On the other hand, a number of papers showed that LLM evaluators are often extremely sensitive to certain biases. For example, they often change their preferences if you swap the two outputs to be compared (<a href="https://arxiv.org/abs/2305.17926">Wang et al., 2023</a>). They also favor longer outputs and outputs generated by a similar model (<a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a>). Therefore, there are several “meta-evaluation” benchmarks proposed to evaluate how good LLM evaluators are (usually in the form of accuracy on human preference data), namely FairEval (<a href="https://arxiv.org/abs/2305.17926">Wang et al., 2023</a>), MT-Bench (<a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a>), and LLMEval^2 (<a href="https://arxiv.org/pdf/2308.01862.pdf">Zhang et al., 2023</a>). While these are valuable resources for us to understand how reliable LLM evaluators are, different evaluators often have close scores on these benchmarks. Moreover, the human annotations of these benchmarks are often noisy and subjective, and the intrinsic human agreement rate is quite low (e.g., <a href="https://arxiv.org/abs/2305.14387">AlpacaFarm</a> reports a human agreement of 66%, <a href="https://arxiv.org/abs/2306.05685">MT-Bench</a> reports a human agreement rate of 63%<sup id="fnref:6" role="doc-noteref"><a href="#fn:6" class="footnote" rel="footnote">6</a></sup>, and FairEval reports 71.7%). It is then unclear whether we can trust those meta-evaluation benchmarks, and the LLM evaluators.</p>
+
+<h2 id="llmbar-a-better-meta-evaluation-of-llm-evaluators">LLMBar: a better meta-evaluation of LLM evaluators</h2>
+
+<p>In our recent work, <strong><a href="https://arxiv.org/abs/2310.07641">Evaluating Large Language Models at Evaluating Instruction Following</a></strong>, we rethink the problem of meta-evaluation. We argue that previous works ignore one important factor — the intrinsic subjectivity of human preferences.</p>
+
+<div><img src="/assets/2023-11-30-instruction-tuning/Untitled.png" align="center" alt="Responsive image" class="figure-img img-fluid" style="margin:20px" width="90%" /><br /><p align="left"><i></i></p></div>
+
+<p>Given the above example from a previous dataset, even though the quality difference between the two is discernible, human annotators prefer the longer one, adding this bias to the preference dataset. When we assess LLM evaluators based on such subjective and noisy meta benchmarks, we cannot guarantee that the high-scoring evaluators can reliably evaluate objective properties, such as instruction following or factual correctness, over subjective preferences such as the output length.</p>
+
+<p>Following this path, we create a new meta-evaluation benchmark, LLMBar, that focuses on one objective criterion — <strong>instruction following</strong>. We choose instruction following because (1) it is an ability that can be objectively evaluated; (2) it is directly related to desirable LLM properties such as <em>helpfulness</em> (<a href="https://arxiv.org/abs/2112.00861">Askell et al., 2021</a>); (3) unlike superficial qualities that can be easily acquired via imitation learning, even the strongest LLMs today struggle on this matter (<a href="https://arxiv.org/abs/2307.02477">Wu et al., 2023</a>). One example from LLMBar is as follows,</p>
+
+<div><img src="/assets/2023-11-30-instruction-tuning/Untitled%201.png" align="center" alt="Responsive image" class="figure-img img-fluid" style="margin:20px" width="90%" /><br /><p align="left"><i></i></p></div>
+
+<p>Even though it’s clear that the right output follows the instruction, both human and LLM evaluators often prefer the left one due to its more engaging tone. If we do not rigorously analyze the ability of evaluators to distinguishing between the true instruction following ability and superficial clues, there is a risk of advancing models that excel in mimicking conversational assistants rather than executing desired tasks.</p>
+
+<p>In LLMBar, the authors manually curated 419 instances, where each entry consists of an instruction paired with two outputs: one faithfully follows the instruction and the other deviates, and there always exists an objective preference. Thanks to the objective criterion and the manual curation, LLMBar has a human agreement rate of <strong>94%</strong>. We test the evaluators on those output pairs and compare the evaluator preferences to our gold labels. We also curate an adversarial set, where the “bad” output often has some superficial appeal (length, engaging tones, generated by a better LM, etc.) that may mislead an evaluator. LLMBar demonstrates surprising results:</p>
+
+<div><img src="/assets/2023-11-30-instruction-tuning/Untitled%202.png" align="center" alt="Responsive image" class="figure-img img-fluid" style="margin:20px" width="100%" /><br /><p align="left"><i></i></p></div>
+
+<p>While ChatGPT, LLaMA2-70B-Chat, PaLM2-bison, and GPT-4 perform similarly on other meta-evaluation benchmarks, they demonstrate very distinct performance on LLMBar (adversarial) — ChatGPT and LLaMA2 score even below random guess, and GPT-4 is much more accurate than any other evaluator.</p>
+
+<p>Besides different LLMs, we also show that different prompts matter a lot for the evaluator. Several previous works explored in this direction: <a href="https://arxiv.org/abs/2305.17926">Wang et al., 2023</a> proposed sampling multiple explanations and aggregating them into a final judgment; <a href="https://arxiv.org/abs/2306.05685">Zheng et al., 2023</a> suggested a reference-guided method, where the LLM evaluator first generates its own output given the instruction, and then uses it as a reference; there are also several papers showing that deploying multiple evaluators (different LLMs or prompts) and letting them communicate or synthesize their judgements can improve the evaluator accuracy (<a href="https://arxiv.org/abs/2307.02762">Li et al., 2023</a>; <a href="https://arxiv.org/pdf/2308.01862.pdf">Zhang et al., 2023</a>; <a href="https://arxiv.org/abs/2308.07201">Chan et al., 2023</a>). In our work, we propose a combo of methods: <strong>metrics+reference+rules</strong> (as shown below). We first prompt the LLM to generate three instruction-specific metrics or rubrics (a recent work, <a href="https://arxiv.org/abs/2310.15123">Saha et al., 2023</a>, proposed a similar strategy); we also prompt the LLM to generate a reference output. Then, we feed the LLM the metrics and the reference, explicitly list the rules (e.g., focusing on instruction following, ignoring positional bias), and ask the model to give a judgement. Compared to a vanilla prompt used in <a href="https://arxiv.org/abs/2305.14387">AlpacaFarm</a>, our new prompt significantly improves the evaluator performance on LLMBar (10% boost for GPT-4 on the adversarial set). We have more ablation studies in the paper and more interesting results, for example, chain of thought (<a href="https://arxiv.org/abs/2201.11903">Wei et al., 2023</a>) hurts the evaluator accuracy most of the time, a counter-intuitive finding.</p>
+
+<div><img src="/assets/2023-11-30-instruction-tuning/Untitled%203.png" align="center" alt="Responsive image" class="figure-img img-fluid" style="margin:20px" width="90%" /><br /><p align="left"><i></i></p></div>
+
+<h2 id="looking-forward">Looking forward</h2>
+
+<p>The emergence of open-source instruction-tuning data, algorithms, and models is one of the most exciting progress for LLMs in 2023. It gives researchers and developers the chance to train, evaluate, interact, and analyze instruction models with full control (from parameters to data), which only existed as black boxes before. The past few months are also a bit “chaotic” for the field, as hundreds of papers released results with different data, algorithms, base models, and even evaluation, making it hard to cross-compare the literature. I expect that the community will soon converge to some standard data/evaluation and we can develop better instruction-tuning models in a more scientific and reproducible way!</p>
+
+<p><strong>Acknowledgement</strong>: Thanks Tanya Goyal, Zhiyuan Zeng, Mengzhou Xia, Shunyu Yao, and Ben Eysenbach for their helpful feedback on the blogpost!</p>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:1" role="doc-endnote">
+      <p>Open-ended instruction tuning should be distinguished from (multi-task) instruction tuning, which we will explain in details below. Here we use “open-ended instruction tuning” as an umbrella term to cover both supervised fine-tuning and the later alignment stage. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:2" role="doc-endnote">
+      <p>The May2023-version LIMA only beats Alpaca—which imitates davinci003—and davinci003. It’s unclear how LIMA will compare to open-source models using other data. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:3" role="doc-endnote">
+      <p>WebGPT (<a href="https://arxiv.org/abs/2112.09332">Nakano et al., 2021</a>) also provides a preference data but it is tailored just for the WebGPT task format. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:4" role="doc-endnote">
+      <p>This stage also involves “constitutional AI”, as the SFT model is prompted with “principles” when generating preferences. <a href="#fnref:4" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:5" role="doc-endnote">
+      <p>This method is never clearly mentioned in any paper and is only hinted by <a href="https://platform.openai.com/docs/model-index-for-researchers">this OpenAI document</a>. <a href="#fnref:5" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:6" role="doc-endnote">
+      <p>MT-Bench (<a href="https://arxiv.org/pdf/2306.05685.pdf">Zheng et al., 2023</a>) reports several human agreement rate. When including non-tie and tie (counts inconsistent votes as tie), the human agreement is 63%; when only including the non-tie votes, the human agreement rate is 81%. In both cases, it’s lower than the corresponding GPT-4 agreement rate to humans (66% and 85%). <a href="#fnref:6" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+    </div>
+
+</div>
+</body>
+</html>
